@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import css from "components/Form/Form.module.css";
-import { nanoid } from "nanoid";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchContacts } from "components/Redux/fetchContacts";
 import { getContacts } from "components/Redux/selectors";
@@ -42,7 +41,7 @@ export default function Form () {
     ) {
       Notify.failure(name + " is already in your contacts.");
     } else {
-      dispatch(addContact({ id: nanoid(), name, number }));
+      dispatch(addContact({name, number }));
       Notify.success(`${name} was added to your contacts`);
       setName("");
       setNumber("");
