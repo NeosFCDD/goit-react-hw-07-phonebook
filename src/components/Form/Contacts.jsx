@@ -1,35 +1,53 @@
-import css from 'components/Form/Form.module.css';
+import css from "components/Form/Form.module.css";
 import { useSelector, useDispatch } from "react-redux";
-import { removeContact } from "components/Redux/contactsSlice.js";
+import Loader from "components/Form/Loader";
+import {
+  getContacts,
+  getIsLoading,
+  getError,
+  getFilter,
+} from "components/Redux/selectors";
+import { deleteContact } from "components/Redux/deleteContacts";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 const Contacts = () => {
   const dispatch = useDispatch();
-
-  const filter = useSelector((state) => state.filter);
+  const contacts = useSelector(getContacts);
+  const isLoading = useSelector(getIsLoading);
+  const error = useSelector(getError);
+  const filter = useSelector(getFilter);
   const lowerCaseFilter = filter.toLowerCase();
-
-  const contacts = useSelector((state) => state.contacts.contacts);
-
-  const filteredContacts = contacts.filter ((contact) =>
-    contact.name.toLowerCase().includes(lowerCaseFilter));
-
-  const deleteContact = (contactId) => {
-    dispatch(removeContact(contactId));
+  
+  const removeContact = (contactId, contactName) => {
+    dispatch(deleteContact(contactId));
+    Notify.success(`${contactName} was deleted from your contacts`);
   };
+  
+  const filteredContacts = contacts.filter((contact) =>
+    contact.name.toLowerCase().includes(lowerCaseFilter)
+  );
 
-  return (
-    <ul>
-      {filteredContacts.map (({ id, name, number }) => (
-        <li key={id} className={css.item}>
-          <p className={css.text}>
-            {name}: {number}
-          </p>
-          <button className={css.btn} type="button" onClick={() => deleteContact(id)}>
-            Delete
-          </button>
-        </li>
-      ))}
-    </ul>
+  return contacts.length === 0 && isLoading && !error ? (
+    <Loader />
+   ) : (
+    <>
+      <ul className={css.list}>
+        {filteredContacts.map(({ id, name, number }) => (
+          <li key={id} className={css.item}>
+            <p className={css.text}>
+              {name}: {number}
+            </p>
+            <button
+              className={css.deletebutton}
+              type="button"
+              onClick={() => removeContact(id, name)}
+            >
+              x
+            </button>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 };
 

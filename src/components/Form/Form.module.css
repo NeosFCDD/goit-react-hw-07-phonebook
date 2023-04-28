@@ -14,7 +14,10 @@
 }
       
 .item {
+        display: flex;
+        justify-content: center;
         align-items: center;
+        text-align: center;
         margin-bottom: 15px;
 }
       
@@ -36,4 +39,16 @@
 .button:hover {
         box-shadow: none;
         background-color: #e4fd74;
+}
+
+.deletebutton {
+        border-radius: 50px;
+        background-color: #f13333;
+        border: transparent;
+        align-items: center;
+}
+
+.loader-container {
+        text-align: center;
+        padding-top: 70px;
 }
